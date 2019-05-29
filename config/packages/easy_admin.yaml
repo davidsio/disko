@@ -1,0 +1,62 @@
+easy_admin:
+    site_name:
+        'Disko Administration'
+        
+    design:
+        menu:
+            - label: "Gérer les données"
+              icon: "tasks"
+              children:
+                  - { entity: "FormulaireContact", label: "Les formulaires", default: true }
+                  - { entity: "User", label: "Les utilisateurs", default: true }
+
+            - label: "Retour au site"
+              icon: "home"
+              url: '/'
+              
+            - label: "Se déconnecter"
+              icon: "power-off"
+              url: '/logout'
+    entities:
+        
+        # List the entity class name you want to manage
+        
+        
+        FormulaireContact:
+            class: App\Entity\FormulaireContact
+            list:
+                fields:
+                    - { property : 'id' }
+                    - { property : 'sujet' }
+                    - { property : 'message' }
+                actions:
+                    - { name: 'show', icon: 'eye', label: 'Visualiser' }
+                    - { name: 'delete', icon: 'times', label: 'supprimer' }
+                    - { name: 'search', icon: '', label: 'Rechercher' }
+           
+                    
+                    - { name: '-edit'}
+                    - { name: 'new'}
+
+                title: "Liste des formulaires"
+                
+                max_results: 10
+                
+            show:
+#                fields:
+#                    - { type: 'section', label: 'Informations', icon: 'user' }
+#                    - { property : 'id' }
+                actions:
+                    - { name: 'delete', icon: 'times', label: 'supprimer' }
+                    - { name: '-edit' }
+                    - { name: 'list', icon: 'long-arrow-alt-left', label: 'Retour' } 
+                    
+                title: "Formulaire n°%%entity_id%%"
+                
+        User:
+            class: App\Entity\User
+
+    user:
+        display_name: true
+        display_avatar: true
+

@@ -16,8 +16,10 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DiskoController{
+
+class DiskoController extends AbstractController{
     
     
     /**
@@ -26,7 +28,7 @@ class DiskoController{
      */
     public function accueilDisko() {
         
-        return new Response('test');
+        return $this->render('formulaire/formulaire.html.twig');
         
     }
     
