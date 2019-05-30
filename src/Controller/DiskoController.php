@@ -14,23 +14,58 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\User;
+use App\Form\FormulaireContactType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
+class DiskoController extends AbstractController {
 
-class DiskoController extends AbstractController{
-    
-    
     /**
      * @Route("/", name="accueil")
-     * @return Response
      */
-    public function accueilDisko() {
-        
-        return $this->render('formulaire/formulaire.html.twig');
-        
+    public function accueilDisko(Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer) {
+
+
+        $formulaire = $this->createForm(FormulaireContactType::class);
+
+        $formulaire->handleRequest($request);
+
+        if ($formulaire->isSubmitted() && $formulaire->isValid() && $formulaire->getNormData()->getMessage() != null) {
+
+            $em->persist($formulaire->getNormData());
+            $em->flush();
+
+            $message = (new \Swift_Message('Nouveau contact - DISKO'))
+                    ->setFrom('PRECISER ADRESSE MAIL DU COMPTE EXPÉDITEUR')
+                    ->setTo("PRECISER ADRESSE MAIL DE L'ADMIN")
+                    ->setBody(
+                    $this->renderView(
+                            'emails/notification.html.twig',
+                            ['nom' => $formulaire->getNormData()->getNom(),
+                                'prenom' => $formulaire->getNormData()->getPrenom(),
+                                'sujet' => $formulaire->getNormData()->getSujet(),
+                                'url' => $_SERVER['HTTP_HOST']]
+                    ),
+                    'text/html'
+                    )
+            ;
+            $mailer->send($message);
+
+            return $this->redirectToRoute("succes");
+        }
+
+        return $this->render('formulaire/formulaire.html.twig', ['form' => $formulaire->createView()]);
     }
-    
-    
+
+    /**
+     * @Route("/succes", name="succes")
+     */
+    public function messageOk() {
+        return $this->render('formulaire/formulaire_succes.html.twig');
+    }
+
+
 }

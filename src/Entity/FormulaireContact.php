@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * FormulaireContact
  *
@@ -30,14 +30,14 @@ class FormulaireContact
 
     /**
      * @var string
-     *
+     * @Assert\Regex(pattern="/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/", match=true, message="Adresse mail non conforme")
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
-     * @var string
-     *
+     * @var string   
+     * 
      * @ORM\Column(name="nom", type="string", length=255, nullable=false)
      */
     private $nom;
@@ -51,22 +51,21 @@ class FormulaireContact
 
     /**
      * @var string
-     *
+     * @Assert\Regex(pattern="/\d/", match=true, message="Numéro de téléphone non conforme")
      * @ORM\Column(name="telephone", type="string", length=10, nullable=false)
      */
     private $telephone;
 
     /**
      * @var string
-     *
+     * 
      * @ORM\Column(name="date_naissance", type="date", nullable=false)
      */
     private $dateNaissance;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="message", type="text", length=0, nullable=false)
+     * @ORM\Column(name="message", type="text", nullable=false)
      */
     private $message;
 
